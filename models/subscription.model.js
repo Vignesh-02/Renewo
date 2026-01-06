@@ -1,5 +1,7 @@
 import mongoose  from "mongoose";
 import User from "./user.model.js";
+import dayjs from 'dayjs'
+
 
 const subscriptionSchema = new mongoose.Schema({
     name:{
@@ -37,7 +39,8 @@ const subscriptionSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ['active', 'cancelled', 'expired'],
-        default: 'active'
+        default: 'active',
+        index: true
     },
     startDate: {
         type: Date,
@@ -62,29 +65,64 @@ const subscriptionSchema = new mongoose.Schema({
         required: true,
         index: true,
 
-    }
+    },
+    cancelledAt: {
+      type: Date,
+      default: null,
+      index: true,
+    },
     
 },{timestamps: true})
 
+const frequencyMap = {
+  daily: 'day',
+  weekly: 'week',
+  monthly: 'month',
+  yearly: 'year',
+};
+
 // Auto-calculate renwewal date if it is missing
 subscriptionSchema.pre('save', function(next){
-    if(!this.renewalDate){
-        const renewalPeriods = {
-            daily: 1,
-            weekly: 7,
-            monthly: 30,
-            yearly: 365, 
-        };
 
-        this.renewalDate = new Date(this.startDate)
-        this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriods[this.frequency]);
+    const frequencyChanged = this.isModified('frequency');
+    const startDateChanged = this.isModified('startDate');
+    const renewalDateManuallyChanged = this.isModified('renewalDate');
+
+    console.log(
+  'startDate modified?',
+  this.isModified('startDate'),
+  'frequency modified?',
+  this.isModified('frequency')
+);
+
+    // const renewalPeriods = {
+    //         daily: 1,
+    //         weekly: 7,
+    //         monthly: 30,
+    //         yearly: 365, 
+    //     };
+
+    if (frequencyChanged || startDateChanged || !this.renewalDate) {
+    
+    const unit = frequencyMap[this.frequency];
+
+    this.renewalDate = dayjs(this.startDate)
+      .add(1, unit)
+      .toDate();
+  }
+    // this.renewalDate = new Date(this.startDate)
+    // this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriods[this.frequency]);
+  
+ 
+
+        // this.renewalDate = new Date(this.startDate)
+        // this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriods[this.frequency]);
     
         // jan 1st
         // renewal frequency is monthly, monthly = 30 days
         // Therefore, renewal date is set to Jan 31st
-
     
-    }
+    
 
 
     // Auto-update the status if renewal date has passed

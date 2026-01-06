@@ -9,7 +9,7 @@ userRouter.get('/', getUsers);
 
 userRouter.get('/:id', authorize, getUser);
 
-userRouter.post('/', (req,res) => res.send({title: "henlo"}));
+// userRouter.post('/', (req,res) => res.send({title: "henlo"}));
 
 userRouter.put('/:id', (req,res) => res.send({title: "henlo"}));
 

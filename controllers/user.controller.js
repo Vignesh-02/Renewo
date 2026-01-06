@@ -24,9 +24,20 @@ export const getUser = async (req, res, next) => {
             throw error;
         }
 
+        
+        // check if the user trying to access the details is the same user
+        if(req.user._id.toString() !== req.params.id){
+            const error = new Error('You are trying to access the details of another user, which is not permitted');
+            error.statusCode = 404;
+            throw error;
+        }
+                console.log('TESTING')
+
+
         res.status(200).json({ success: true, data: user });
+
      }catch(error){
-        console.log(error);
+        // console.log(error);
         next(error);
      }
 }
