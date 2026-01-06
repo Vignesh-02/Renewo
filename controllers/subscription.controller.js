@@ -120,16 +120,41 @@ export const deleteSubscription = async (req, res, next) => {
 };
 
 
+export const getSubscription = async(req, res, next) => {
+    try{
+
+        const subscription = await Subscription.findOne({
+            _id: req.params.id,
+            user: req.user._id
+        });
+
+        if (!subscription) {
+            return res.status(404).json({ message: 'Subscription not found' });
+        }
+
+        // the user trying to view the subscription is a differnet person
+        if (req.user._id.toString() !== subscription.user.toString()){
+            const error = new Error('You are trying to get the subscription details of another user, which is not permitted');
+            error.statusCode = 404;
+            throw error;
+        }
+
+        res.status(200).json({ success: true, data: subscription});
+        
+    }catch(e){
+        next(e);
+    }
+}
 
 
 
 
 
-export const getUserSubscription = async(req, res, next) => {
+export const getUserSubscriptions = async(req, res, next) => {
     try{
 
 
-        // check if the usser is the same as the token
+        // check if the user is the same person trying to view subscriptions
         if(req.user.id !== req.params.id){
             const error = new Error('You are not the owner of this account');
             error.status = 401;
