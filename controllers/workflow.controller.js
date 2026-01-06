@@ -10,12 +10,12 @@ const { serve } = require('@upstash/workflow/express')
 const REMINDERS = [7,5,2,1]
 
 export const sendReminders = serve(async(context)=>{
-    console.log('reached reminder');
+    // console.log('reached reminder');
 
     const { subscriptionId } = context.requestPayload;
     const subscription = await fetchSubscription(context, subscriptionId);
 
-    console.log('fetched subscription', subscription);
+    // console.log('fetched subscription', subscription);
 
     // // 1️⃣ Deleted
     // if (!subscription) {
@@ -34,10 +34,9 @@ export const sendReminders = serve(async(context)=>{
     const renewalDate = dayjs(subscription.renewalDate);
     // const reminderDate = renewalDate.subtract(daysBefore, 'day');
 
-    console.log('Renewal date', renewalDate)
+    // console.log('Renewal date', renewalDate)
 
     if(renewalDate.isBefore(dayjs())){
-        console.log('if before');
         console.log(`Renewal date has passed for subscription ${subscriptionId}. Stopping workflow`);
         return;
     }
@@ -58,10 +57,11 @@ export const sendReminders = serve(async(context)=>{
     }
 
 
-         console.log('test1')
+        //  console.log('test1')
+
         //  if reminder is after the current date, sleep until the reminder date
          if(reminderDate.isAfter(dayjs())){
-            console.log('test2')
+            // console.log('test2')
             console.log(`${daysBefore} days before reminder`);
             await sleepUntilReminder(context, `sleep ${daysBefore} days before reminder`, reminderDate)
          }
@@ -74,7 +74,7 @@ export const sendReminders = serve(async(context)=>{
 
          
          if (dayjs().isSame(reminderDate, 'day')) {
-            console.log('testing here');
+            // console.log('testing here');
             await triggerReminder(context,  `send ${daysBefore} days before reminder`, latestSubscription, daysBefore);
         }
 
@@ -96,8 +96,8 @@ const sleepUntilReminder = async(context, label, date) => {
 }
 
 const triggerReminder = async(context, label, subscription, daysBefore) => {
-    console.log('testing again');
-    console.log(subscription.user.email, daysBefore);
+    // console.log('testing again');
+    // console.log(subscription.user.email, daysBefore);
     return await context.run(label, async () => {
         console.log(`Triggering reminder to be sent ${daysBefore}`)
         //Send email, sms, push notification

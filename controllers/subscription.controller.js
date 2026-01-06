@@ -10,7 +10,7 @@ export const createSubscription = async (req, res, next) => {
             // req.user is coming from the auth middleware
         });
 
-        console.log('subscription', subscriptionData);
+        // console.log('subscription', subscriptionData);
 
         // const out = await triggerReminderWorkflows(workflowClient, subscription);
 
@@ -25,7 +25,7 @@ export const createSubscription = async (req, res, next) => {
             retries: 0
         })
 
-        console.log('reminder api output', out);
+        // console.log('reminder api output', out);
 
         const workflowRunId = out.workflowRunId;
 

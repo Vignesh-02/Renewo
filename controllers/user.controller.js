@@ -3,7 +3,7 @@ import User from "../models/user.model.js";
  export const getUsers = async (req, res, next) => {
      try{
         const users = await User.find();
-        console.log('users ',users);
+        // console.log('users ',users);
         res.status(200).json({ success: true, data: users });
      }catch(error){
         next(error)
@@ -13,10 +13,8 @@ import User from "../models/user.model.js";
 
 export const getUser = async (req, res, next) => {
      try{
-        console.log('req', req);
-        const user = await User.findById(req.params.id).select('-password');
 
-        console.log('rcvd user', user);
+        const user = await User.findById(req.params.id).select('-password');
         
         if(!user){
             const error = new Error('User not found');
@@ -31,8 +29,6 @@ export const getUser = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-                console.log('TESTING')
-
 
         res.status(200).json({ success: true, data: user });
 
