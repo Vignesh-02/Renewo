@@ -88,12 +88,12 @@ subscriptionSchema.pre('save', function(next){
     const startDateChanged = this.isModified('startDate');
     const renewalDateManuallyChanged = this.isModified('renewalDate');
 
-    console.log(
-  'startDate modified?',
-  this.isModified('startDate'),
-  'frequency modified?',
-  this.isModified('frequency')
-);
+//     console.log(
+//   'startDate modified?',
+//   this.isModified('startDate'),
+//   'frequency modified?',
+//   this.isModified('frequency')
+// );
 
     // const renewalPeriods = {
     //         daily: 1,

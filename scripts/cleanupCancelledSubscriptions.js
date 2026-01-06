@@ -12,7 +12,7 @@ const CLEANUP_AFTER_DAYS = 60; // change to 30 / 90 if needed
 
 const cleanupCancelledSubscriptions = async () => {
   try {
-    console.log('🧹 Starting cleanup job...');
+    console.log('Starting cleanup job...');
 
     await mongoose.connect(process.env.MONGO_URI);
 
@@ -26,7 +26,7 @@ const cleanupCancelledSubscriptions = async () => {
     });
 
     console.log(
-      `✅ Cleanup complete. Deleted ${result.deletedCount} subscriptions`
+      `Cleanup complete. Deleted ${result.deletedCount} subscriptions`
     );
 
     process.exit(0);
